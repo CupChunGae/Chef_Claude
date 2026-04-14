@@ -1,24 +1,27 @@
 import React from "react"
+import ClaudeRecipe from "./ClaudeRecipe"
+import IngredientsList from "./IngredientsList";
 
 export default function Main() {
 
-    const [ingredients, setIngredients] = React.useState(["Chicken"]);
+    const [ingredients, setIngredients] = React.useState([]);
 
-    const ingredientsListItems = ingredients.map(ingredient => (
-        <li key={ingredient}>{ingredient}</li>
-    ))
 
-    function handleSubmit(event) {
-        event.preventDefault();
-        const formData = new FormData(event.currentTarget)
+    function addIngredient(formData) {
         const newIngredient = formData.get("ingredient")
 
         setIngredients(prevArray => [...prevArray, newIngredient])
     }
 
+    const [recipeShown, setRecipeShown] = React.useState(false);
+
+    function handleClick() {
+        setRecipeShown(prevState => !prevState)
+    }
+
     return (
         <main>
-            <form onSubmit={handleSubmit} className="IngredientForm">
+            <form action={addIngredient} className="IngredientForm">
                 <input 
                 type="text" 
                 aria-label="Add ingredient"
@@ -27,9 +30,9 @@ export default function Main() {
                 />
                 <button>Add Ingredient</button>
             </form>
-            <ul>
-                {ingredientsListItems}
-            </ul>
+            {ingredients.length > 0 && <IngredientsList ingredients={ingredients}
+            buttonClicked={handleClick}/>}
+            {recipeShown == true && <ClaudeRecipe/>}
         </main>
     )
 }
